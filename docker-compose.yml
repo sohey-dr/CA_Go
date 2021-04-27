@@ -15,24 +15,20 @@ services:
       - "db"
 
   db:
-    image: mysql:latest
-    platform: linux/x86_64
+    container_name: davida_db
+    platform: linux/x86_64 #m1
+    image: mysql@sha256:d8e4032005f53a774f2361281ebf61fa3d7635d5dacf9c58bc54e823ddcf9f1d #m1
+    # image: mysql:5.7.22
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ca_mission
-      MYSQL_USER: username
-      MYSQL_PASSWORD: password
-      TZ: 'Asia/Tokyo'
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    volumes:
-      - db-data:/var/lib/mysql
-      - ./db/initdb.d:/docker-entrypoint-initdb.d
-      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+      TZ: Asia/Tokyo
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: "adminpasspass"
+      MYSQL_ROOT_PASSWORD: ""
     ports:
-      - 3306:3306
-    cap_add:
-      - SYS_NICE
-
+      - "6606:3306"
+    volumes:
+      - ./docker/mysql_data:/var/lib/mysql:delegated
 volumes:
   db-data:
-    driver: local
